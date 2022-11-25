@@ -3,10 +3,12 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
 
     sequelize.define('game', {
-        idAPI: {
-            type: DataTypes.STRING,
+        id: {
+            type: DataTypes.UUID,
             allowNull: false,
-        },
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
+          },
         description: {
             type: DataTypes.TEXT,
         },
@@ -26,7 +28,7 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
         },
         rating: {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.STRING,
         },
         price: {
             type: DataTypes.INTEGER,
@@ -38,7 +40,8 @@ module.exports = (sequelize) => {
         },
         deleted: {
             type: DataTypes.BOOLEAN,
-            default: false,
+            defaultValue: false,
+            allowNull: false,
         },
     },
         {

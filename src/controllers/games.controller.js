@@ -28,6 +28,74 @@ const gamesApi = async(req, res) => {
 res.status(200).json({ msg: "Games added succesfully" });
 }
 
+const allGames = async (req, res) => {
+  const { name } = req.query 
+  const totalGames = await Game.findAll({
+    where: {
+      deleted: false
+    }
+  })
+  try {
+    if(name){
+      let nameGame = await Game.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${name}%` ,
+          }
+        }
+      })
+      nameGame.length ?
+      res.send(nameGame) :
+      res.send(`${name} not found`)
+    }else{
+      totalGames.length ?
+      res.send(totalGames):
+      res.send("There are not documents on Game Model")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const postGame = async(req, res) => {
+  const { name, description, background_image, platforms, released, rating, price, genres } = req.body
+  try {
+    const game = await Game.create({
+        name,
+        description,
+        background_image,
+        platforms,
+        released,
+        rating,
+        price,
+        genres
+    })
+    console.log(game, 'GAME')
+    res.send(game)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const deleteGame = async(req, res) => {
+  const { id } = req.params
+  try {
+    const deletedGame = await Game.destroy({
+      where: {
+        id
+      }
+    })
+    res.send(`${deletedGame} has been deleted`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+
 module.exports = {
     gamesApi,
+    allGames,
+    postGame,
+    deleteGame,
 }
